@@ -1,30 +1,24 @@
 import static org.gradle.api.JavaVersion.VERSION_21
 
-apply plugin: 'com.android.library'
-apply plugin: 'kotlin-android'
+plugins {
+    id 'com.android.library'
+    id 'kotlin-android'
+    id 'maven-publish'
+}
 
 ext {
-    bintrayRepo = 'maven'
-    bintrayName = 'elevationimageview'
-
     publishedGroupId = 'com.qhutch.elevationimageview'
-    libraryName = 'ElevationImageView'
     artifact = 'elevationimageview'
-
+    libraryVersion = '2.5'
     libraryDescription = 'Imageview with elevation shadow'
-
     siteUrl = 'https://github.com/qhutch/ElevationImageView'
     gitUrl = 'https://github.com/qhutch/ElevationImageView.git'
-
-    libraryVersion = '2.4'
-
-    developerId = 'qhutch'
-    developerName = 'Quentin Menini'
-    developerEmail = 'quentin.menini@gmail.com'
-
     licenseName = 'The Apache Software License, Version 2.0'
     licenseUrl = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
     allLicenses = ["Apache-2.0"]
+    developerId = 'qhutch'
+    developerName = 'Quentin Menini'
+    developerEmail = 'quentin.menini@gmail.com'
 }
 
 android {
@@ -34,11 +28,7 @@ android {
     defaultConfig {
         minSdkVersion rootProject.minSdkVersion
         targetSdkVersion sdkVersion
-
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-
-        renderscriptTargetApi sdkVersion
-        renderscriptSupportModeEnabled true
     }
 
     buildTypes {
@@ -52,14 +42,62 @@ android {
         sourceCompatibility VERSION_21
         targetCompatibility VERSION_21
     }
+
+    kotlinOptions {
+        jvmTarget = '21'
+    }
+
+    publishing {
+        singleVariant("release") {
+            withSourcesJar()
+            withJavadocJar()
+        }
+    }
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-
-    implementation 'androidx.appcompat:appcompat:1.0.2'
+    implementation 'androidx.appcompat:appcompat:1.7.1'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$rootProject.kotlin_version"
 }
-repositories {
-    mavenCentral()
+
+publishing {
+    publications {
+        release(MavenPublication) {
+            groupId = publishedGroupId
+            artifactId = artifact
+            version = libraryVersion
+
+            afterEvaluate {
+                from components.release
+            }
+
+            pom {
+                name = artifact
+                description = libraryDescription
+                url = siteUrl
+
+                licenses {
+                    license {
+                        name = licenseName
+                        url = licenseUrl
+                    }
+                }
+
+                developers {
+                    developer {
+                        id = developerId
+                        name = developerName
+                        email = developerEmail
+                    }
+                }
+
+                scm {
+                    connection = "scm:git:$gitUrl"
+                    developerConnection = "scm:git:$gitUrl"
+                    url = siteUrl
+                }
+            }
+        }
+    }
 }
