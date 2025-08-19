@@ -14,7 +14,7 @@ Add this to your app build.gradle
 ```
 dependencies {
     ...
-    implementation 'com.qhutch.elevationimageview:elevationimageview:2.4'
+    implementation 'com.github.rtsketo:ElevationImageView:v2.5'
 }
 ```
 You will also need support renderscript, also in your build.gradle :
