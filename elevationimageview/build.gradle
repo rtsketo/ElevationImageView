@@ -1,3 +1,5 @@
+import static org.gradle.api.JavaVersion.VERSION_21
+
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 
@@ -26,16 +28,16 @@ ext {
 }
 
 android {
-    compileSdkVersion rootProject.compileSdkVersion
+    namespace 'com.qhutch.elevationimageview'
+
+    compileSdkVersion sdkVersion
     defaultConfig {
         minSdkVersion rootProject.minSdkVersion
-        targetSdkVersion rootProject.targetSdkVersion
-        versionCode 3
-        versionName "2.4"
+        targetSdkVersion sdkVersion
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
-        renderscriptTargetApi 18
+        renderscriptTargetApi sdkVersion
         renderscriptSupportModeEnabled true
     }
 
@@ -46,6 +48,10 @@ android {
         }
     }
 
+    compileOptions {
+        sourceCompatibility VERSION_21
+        targetCompatibility VERSION_21
+    }
 }
 
 dependencies {
@@ -57,6 +63,3 @@ dependencies {
 repositories {
     mavenCentral()
 }
-
-apply from: '../installv1.gradle'
-apply from: '../bintrayv1.gradle'

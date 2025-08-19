@@ -1,34 +1,34 @@
 package com.qhutch.shadowimageview
 
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import android.widget.SeekBar
-import kotlinx.android.synthetic.main.activity_main.*
+import androidx.appcompat.app.AppCompatActivity
+import com.qhutch.shadowimageview.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
 
+    private lateinit var binding: ActivityMainBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        seekbar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
-            override fun onStartTrackingTouch(p0: SeekBar?) {
-            }
-
-            override fun onStopTrackingTouch(p0: SeekBar?) {
-            }
-
-            override fun onProgressChanged(p0: SeekBar?, p1: Int, p2: Boolean) {
-                setImageElevation(p1)
+        binding.seekbar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            override fun onStartTrackingTouch(p0: SeekBar) {}
+            override fun onStopTrackingTouch(p0: SeekBar) {}
+            override fun onProgressChanged(p0: SeekBar, value: Int, fromUser: Boolean) {
+                setImageElevation(value)
             }
         })
     }
 
     private fun setImageElevation(elevation: Int) {
-        textView.text = "Elevation: $elevation dp"
-        imageview1.setElevationDp(elevation.toFloat())
-        imageview2.setElevationDp(elevation.toFloat())
-        imageview3.setElevationDp(elevation.toFloat())
-        imageview4.setElevationDp(elevation.toFloat())
+        binding.textView.text = "Elevation: $elevation dp"
+        val e = elevation.toFloat()
+        binding.imageview1.setElevationDp(e)
+        binding.imageview2.setElevationDp(e)
+        binding.imageview3.setElevationDp(e)
+        binding.imageview4.setElevationDp(e)
     }
 }

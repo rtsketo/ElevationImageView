@@ -5,12 +5,18 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Rect
 import android.os.Build
+import android.renderscript.Allocation
+import android.renderscript.Element
+import android.renderscript.Matrix4f
+import android.renderscript.RenderScript
+import android.renderscript.ScriptIntrinsicBlur
+import android.renderscript.ScriptIntrinsicColorMatrix
 import android.util.AttributeSet
 import android.util.TypedValue
 import android.view.ViewGroup
 import androidx.annotation.AttrRes
 import androidx.appcompat.widget.AppCompatImageView
-import androidx.renderscript.*
+
 
 
 /**
@@ -33,11 +39,7 @@ open class ElevationImageView : AppCompatImageView {
     private fun init(attrs: AttributeSet?) {
         val a = context.obtainStyledAttributes(attrs, R.styleable.ElevationImageView)
 
-        val elevation = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            customElevation.toInt()
-        } else {
-            0
-        }
+        val elevation = customElevation.toInt()
 
         customElevation = a.getDimensionPixelSize(R.styleable.ElevationImageView_compatEvelation, elevation).toFloat()
 
@@ -84,8 +86,8 @@ open class ElevationImageView : AppCompatImageView {
         invalidate()
     }
 
-    override fun onDraw(canvas: Canvas?) {
-        if (!isInEditMode && canvas != null) {
+    override fun onDraw(canvas: Canvas) {
+        if (!isInEditMode) {
             if (shadowBitmap == null && customElevation > 0) {
                 generateShadow()
             }
@@ -151,11 +153,14 @@ open class ElevationImageView : AppCompatImageView {
         val allocationOut = Allocation.createTyped(rs, allocationIn.type)
 
         val matrix = if (isTranslucent) {
-            Matrix4f(floatArrayOf(
+            Matrix4f(
+                floatArrayOf(
                     0.4f, 0f, 0f, 0f,
                     0f, 0.4f, 0f, 0f,
                     0f, 0f, 0.4f, 0f,
-                    0f, 0f, 0f, 0.6f))
+                    0f, 0f, 0f, 0.6f
+                )
+            )
         } else {
             Matrix4f(floatArrayOf(
                     0f, 0f, 0f, 0f,

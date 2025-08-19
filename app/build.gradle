@@ -1,34 +1,48 @@
-apply plugin: 'com.android.application'
+import static org.gradle.api.JavaVersion.VERSION_17
+import static org.gradle.api.JavaVersion.VERSION_21
 
-apply plugin: 'kotlin-android'
-
-apply plugin: 'kotlin-android-extensions'
+plugins {
+    id 'com.android.application'
+    id 'org.jetbrains.kotlin.android'
+}
 
 android {
-    compileSdkVersion rootProject.compileSdkVersion
+    namespace "com.qhutch.shadowimageview"
+    compileSdk sdkVersion
+
     defaultConfig {
         applicationId "com.qhutch.shadowimageview"
-        minSdkVersion rootProject.minSdkVersion
-        targetSdkVersion rootProject.targetSdkVersion
+        minSdk 21
+        targetSdk sdkVersion
         versionCode 1
         versionName "1.0"
+        vectorDrawables { useSupportLibrary = true }
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
-        vectorDrawables.useSupportLibrary = true
-
-        renderscriptTargetApi 18
+        renderscriptTargetApi sdkVersion
         renderscriptSupportModeEnabled true
     }
+
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    buildFeatures {
+        viewBinding true
+    }
+
+    compileOptions {
+        sourceCompatibility VERSION_21
+        targetCompatibility VERSION_21
+    }
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation"org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
     implementation 'androidx.appcompat:appcompat:1.0.2'
     implementation project(':elevationimageview')
 }
